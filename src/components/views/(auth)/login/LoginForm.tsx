@@ -9,7 +9,7 @@ import { useEffect, useState, useTransition } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { PasswordInput } from "@/components/secondary/PasswordInput"
 import LoadingButton from "@/components/secondary/LoadingButton"
-import { login } from "../../../../app/(auth)/login/actions"
+import { login } from "../../../../actions/login/actions"
 
 export default function LoginForm() {
     const [error, setError] = useState<string>();

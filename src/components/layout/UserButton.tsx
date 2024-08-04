@@ -5,7 +5,7 @@ import React from 'react'
 import UserAvatar from './UserAvatar'
 import Link from 'next/link'
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from 'lucide-react'
-import { logout } from '@/app/(auth)/action'
+import { logout } from '@/actions/logout/action'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 
