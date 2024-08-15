@@ -1,5 +1,5 @@
 'use client'
-import { useSession } from '@/app/(main)/SessionProvider'
+import { useSession } from '@/context/SessionProvider'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import React from 'react'
 import UserAvatar from './UserAvatar'
@@ -8,6 +8,7 @@ import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from 'lucide-react'
 import { logout } from '@/actions/logout/action'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface UserButtonProps {
     className?: string
@@ -16,6 +17,8 @@ interface UserButtonProps {
 export default function UserButton({ className }: UserButtonProps) {
     const { user } = useSession()
     const { theme, setTheme } = useTheme()
+    const queryClient = useQueryClient();
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className={cn("flex-none rounded-full", className)}>
@@ -75,6 +78,7 @@ export default function UserButton({ className }: UserButtonProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className='rounded-[8px] cursor-pointer'
                     onClick={() => {
+                        queryClient.clear();
                         logout()
                     }}
                 >

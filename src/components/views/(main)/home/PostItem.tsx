@@ -25,7 +25,7 @@ export default function PostItem({ post }: PostItemProps) {
                 </div>
             </div>
             <div className="whitespace-pre-line break-words text-gray-700 dark:text-white/80">
-                {post.content} 
+                {post.content}
             </div>
         </article>
     )

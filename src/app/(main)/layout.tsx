@@ -1,6 +1,6 @@
 import { validateRequest } from "@/auth";
 import { redirect } from "next/navigation";
-import SessionProvider from "./SessionProvider";
+import SessionProvider from "../../context/SessionProvider";
 import Navbar from "@/components/layout/Navbar";
 import MenuBar from "@/components/layout/MenuBar";
 
