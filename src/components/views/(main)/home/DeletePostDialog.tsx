@@ -2,7 +2,7 @@ import LoadingButton from "@/components/secondary/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader } from "@/components/ui/dialog";
 import { PostData } from "@/lib/types";
-import { useDeletePostMutation } from "@/mutations/posts";
+import { useDeletePostMutation } from "@/store/mutations/posts";
 
 interface DeletePostDialogProps {
     post: PostData;
