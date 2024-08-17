@@ -1,5 +1,6 @@
 import { submitPost } from "@/actions/posts/editor/actions";
 import { useToast } from "@/components/ui/use-toast";
+import { useSession } from "@/context/SessionProvider";
 import { PostsPage } from "@/lib/types";
 import { InfiniteData, QueryFilters, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -7,10 +8,17 @@ export function useSubmitPostMutation() {
     const { toast } = useToast()
     const queryClient = useQueryClient();
 
+    const { user } = useSession();
+
     const mutation = useMutation({
         mutationFn: submitPost,
         onSuccess: async (newPost) => {
-            const queryFilter: QueryFilters = { queryKey: ["posts-feed", "for-you"] };
+            const queryFilter = {
+                queryKey: ["posts-feed"], predicate(query) {
+                    return query.queryKey.includes("for-you") ||
+                        (query.queryKey.includes("user-posts") && query.queryKey.includes(user.id))
+                }
+            } satisfies QueryFilters;
 
             await queryClient.cancelQueries(queryFilter);
 
@@ -37,7 +45,7 @@ export function useSubmitPostMutation() {
             queryClient.invalidateQueries({
                 queryKey: queryFilter.queryKey,
                 predicate(newQuery) {
-                    return !newQuery.state.data;
+                    return queryFilter.predicate(newQuery) && !newQuery.state.data;
                 },
             })
 
