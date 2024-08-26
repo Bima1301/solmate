@@ -6,6 +6,7 @@ import { PostData } from "@/lib/types"
 import { formatRelativeDate } from "@/lib/utils"
 import Link from "next/link"
 import PostMoreButton from "./PostMoreButton"
+import Linkify from "./Linkify"
 
 
 interface PostItemProps {
@@ -38,9 +39,11 @@ export default function PostItem({ post }: PostItemProps) {
                     />
                 )}
             </div>
-            <div className="whitespace-pre-line break-words text-gray-700 dark:text-white/80">
-                {post.content}
-            </div>
+            <Linkify>
+                <div className="whitespace-pre-line break-words text-gray-700 dark:text-white/80">
+                    {post.content}
+                </div>
+            </Linkify>
         </article>
     )
 }

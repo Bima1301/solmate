@@ -4,7 +4,8 @@ import UserAvatar from "@/components/layout/UserAvatar"
 import FollowerCount from "@/components/secondary/FollowerCount"
 import { Button } from "@/components/ui/button"
 import FollowButton from "@/components/views/(main)/home/FollowButton"
-import UserPosts from "@/components/views/(main)/home/users/UserPosts"
+import Linkify from "@/components/views/(main)/home/Linkify"
+import UserPosts from "@/components/views/(main)/users/UserPosts"
 import prisma from "@/lib/prisma"
 import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types"
 import { formatNumber } from "@/lib/utils"
@@ -121,9 +122,11 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
             {user.bio && (
                 <>
                     <hr />
-                    <div className="whitespace-pre-line overflow-hidden break-words">
-                        {user.bio}
-                    </div>
+                    <Linkify>
+                        <div className="whitespace-pre-line overflow-hidden break-words">
+                            {user.bio}
+                        </div>
+                    </Linkify>
                 </>
             )}
         </div>

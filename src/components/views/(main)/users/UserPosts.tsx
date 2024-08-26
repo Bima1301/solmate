@@ -5,8 +5,8 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react";
 import kyInstance from "@/lib/ky";
 import InfiniteScrollContainer from "@/components/secondary/InfiniteScrollContainer";
-import PostItemSkeleton from "../PostItemSkeleton";
-import PostItem from "../PostItem";
+import PostItemSkeleton from "../home/PostItemSkeleton";
+import PostItem from "../home/PostItem";
 
 interface UserPostsProps {
     userId: string
