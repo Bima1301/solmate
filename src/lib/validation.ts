@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 const requiredString = z.string().trim().min(1, 'Required');
 
@@ -20,3 +20,10 @@ export type LoginValues = z.infer<typeof loginSchema>;
 export const createPostSchema = z.object({
     content: requiredString,
 });
+
+export const updateUserProfileSchema = z.object({
+    displayName: requiredString,
+    bio: string().max(1000, "Bio must be 1000 characters or less"),
+})
+
+export type UpdateUserProfileValues = z.infer<typeof updateUserProfileSchema>;
