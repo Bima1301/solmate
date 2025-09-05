@@ -3,11 +3,13 @@
 import UserAvatar from "@/components/layout/UserAvatar"
 import { useSession } from "@/context/SessionProvider"
 import { PostData } from "@/lib/types"
-import { formatRelativeDate } from "@/lib/utils"
+import { cn, formatRelativeDate } from "@/lib/utils"
 import Link from "next/link"
 import PostMoreButton from "./PostMoreButton"
 import Linkify from "./Linkify"
 import UserTooltip from "./UserTooltip"
+import { Media } from "@prisma/client"
+import Image from "next/image"
 
 
 interface PostItemProps {
@@ -49,6 +51,52 @@ export default function PostItem({ post }: PostItemProps) {
                     {post.content}
                 </div>
             </Linkify>
+            {!!post.attachments.length && (
+                <MediaPreviews
+                    attachments={post.attachments}
+                />
+            )}
         </article>
     )
+}
+
+interface MediaPreviewsProps {
+    attachments: Media[]
+}
+
+function MediaPreviews({ attachments }: MediaPreviewsProps) {
+    return (
+        <div className={cn("flex flex-col gap-3", attachments.length > 1 && 'sm:grid sm:grid-cols-2')}>
+            {attachments.map(a => (
+                <MediaPreview key={a.id} media={a} />
+            ))}
+        </div>
+    )
+}
+
+interface MediaPreviewProps {
+    media: Media
+}
+function MediaPreview({ media }: MediaPreviewProps) {
+    if (media.type === 'IMAGE') {
+        return <Image
+            src={media.url}
+            alt="Attachment"
+            width={500}
+            height={500}
+            className="mx-auto size-fit rounded-xl max-h-[30rem]"
+        />
+    }
+    if (media.type === 'VIDEO') {
+        return <div>
+            <video
+                src={media.url}
+                controls
+                className="mx-auto size-fit rounded-xl max-h-[30rem]"
+            />
+        </div>
+    }
+    return <p className="text-destructive">
+        Unsupported media type
+    </p>
 }
