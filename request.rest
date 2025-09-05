@@ -1,0 +1,2 @@
+GET http://localhost:4000/api/clear-uploads
+Authorization: Bearer dh37dhod9ah2bfk2f0ah29fh3
