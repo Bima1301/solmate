@@ -34,7 +34,7 @@ export default function PostItem({ post }: PostItemProps) {
                                 {post.user.displayName}
                             </Link>
                         </UserTooltip>
-                        <Link href={`/posts/${post.id}`} className="block text-sm text-muted-foreground hover:underline">
+                        <Link href={`/posts/${post.id}`} className="block text-sm text-muted-foreground hover:underline" suppressHydrationWarning>
                             {formatRelativeDate(post.createdAt)}
                         </Link>
                     </div>
