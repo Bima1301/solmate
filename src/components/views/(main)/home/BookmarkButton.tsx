@@ -1,9 +1,9 @@
-import { useToast } from "@/components/ui/use-toast";
 import kyInstance from "@/lib/ky";
 import { BookmarkInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bookmark } from "lucide-react";
+import { toast } from "sonner";
 
 interface BookmarkButtonProps {
     postId: string;
@@ -11,8 +11,6 @@ interface BookmarkButtonProps {
 }
 
 export default function BookmarkButton({ initialState, postId }: BookmarkButtonProps) {
-    const { toast } = useToast();
-
     const queryClient = useQueryClient();
 
     const queryKey: QueryKey = ['bookmark-info', postId];
@@ -28,9 +26,7 @@ export default function BookmarkButton({ initialState, postId }: BookmarkButtonP
         mutationFn: () =>
             data.isBookmarkedByUser ? kyInstance.delete(`/api/posts/${postId}/bookmark`) : kyInstance.post(`/api/posts/${postId}/bookmark`),
         onMutate: async () => {
-            toast({
-                description: `Post ${data.isBookmarkedByUser ? 'un' : ''}bookmarked`
-            })
+            toast.success(`Post ${data.isBookmarkedByUser ? 'un' : ''}bookmarked`)
             await queryClient.cancelQueries({ queryKey });
 
             const previousState = queryClient.getQueryData<BookmarkInfo>(queryKey);
@@ -44,11 +40,7 @@ export default function BookmarkButton({ initialState, postId }: BookmarkButtonP
         onError(err, variables, context) {
             queryClient.setQueryData(queryKey, context?.previousState);
             console.error(err);
-            toast({
-                variant: 'destructive',
-                description: 'Something went wrong. Please try again later.'
-            });
-
+            toast.error('Something went wrong. Please try again later.')
         }
 
     })

@@ -1,9 +1,9 @@
-import { useToast } from "@/components/ui/use-toast";
 import kyInstance from "@/lib/ky";
 import { LikeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
+import { toast } from "sonner";
 
 interface LikeButtonProps {
     postId: string;
@@ -11,8 +11,6 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ initialState, postId }: LikeButtonProps) {
-    const { toast } = useToast();
-
     const queryClient = useQueryClient();
 
     const queryKey: QueryKey = ['like-info', postId];
@@ -42,22 +40,18 @@ export default function LikeButton({ initialState, postId }: LikeButtonProps) {
         onError(err, variables, context) {
             queryClient.setQueryData(queryKey, context?.previousState);
             console.error(err);
-            toast({
-                variant: 'destructive',
-                description: 'Something went wrong. Please try again later.'
-            });
-
+            toast.error('Something went wrong. Please try again later.')
         }
 
     })
     return (
         <button
             onClick={() => mutate()}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1"
         >
-            <Heart className={cn("size-5", data.isLikedByUser && 'fill-red-500 text-red-500')} />
+            <Heart className={cn("size-4", data.isLikedByUser && 'fill-red-500 text-red-500')} />
             <span className="text-sm font-medium tabular-nums">
-                {data.likes} <span className="hidden sm:inline">likes</span>
+                {data.likes}
             </span>
         </button>
     )

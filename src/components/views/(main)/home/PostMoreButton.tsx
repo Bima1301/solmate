@@ -17,8 +17,8 @@ export default function PostMoreButton({ post, className }: PostMoreButtonProps)
     return (
         <>
             <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <Button size={'icon'} variant={'ghost'} className={className}>
+                <DropdownMenuTrigger asChild>
+                    <Button size={'sm'} variant={'ghost'} className={className}>
                         <MoreHorizontal className="size-5 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>

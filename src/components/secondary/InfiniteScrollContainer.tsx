@@ -1,5 +1,8 @@
-import { useInView } from "react-intersection-observer"
+'use client'
 
+import { useInView } from "react-intersection-observer"
+import { AnimatePresence, motion } from "framer-motion"
+import { containerVariants } from "@/lib/framer-motion"
 interface InfiniteScrollContainerProps extends React.PropsWithChildren {
     onBottomReached: () => void
     className?: string
@@ -15,9 +18,9 @@ export default function InfiniteScrollContainer({ onBottomReached, className, ch
         }
     })
     return (
-        <div className={className}>
+        <motion.div className={className} variants={containerVariants}>
             {children}
             <div ref={ref} />
-        </div>
+        </motion.div>
     )
 }

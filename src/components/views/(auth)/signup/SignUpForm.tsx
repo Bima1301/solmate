@@ -10,11 +10,11 @@ import { signUp } from "../../../../actions/signup/actions"
 import { useToast } from "@/components/ui/use-toast"
 import { PasswordInput } from "@/components/secondary/PasswordInput"
 import LoadingButton from "@/components/secondary/LoadingButton"
+import { toast } from "sonner"
 
 export default function SignUpForm() {
     const [error, setError] = useState<string>();
     const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
 
     const form = useForm<SignUpValues>({
         resolver: zodResolver(signupSchema),
@@ -37,13 +37,10 @@ export default function SignUpForm() {
 
     useEffect(() => {
         if (error) {
-            console.log(error)
-            toast({
-                title: "Uh oh! Something went wrong.",
-                description: error,
-            })
+            console.error(error)
+            toast.error("Uh oh! Something went wrong.")
         }
-    }, [error, toast])
+    }, [error])
 
     return (
         <Form {...form}>

@@ -19,7 +19,6 @@ export default function ForYouFeed() {
         ).json<PostsPage>(),
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => lastPage.nextCursor
-
     })
 
     const posts = data?.pages.flatMap(page => page.posts) || [];
@@ -44,11 +43,11 @@ export default function ForYouFeed() {
         <InfiniteScrollContainer className="space-y-5"
             onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
         >
-            {posts.map(post => (
-                <PostItem key={post.id} post={post} />
+            {posts.map((post, index) => (
+                <PostItem key={post.id} post={post} index={index} />
             ))}
 
-            {isFetchingNextPage && <Loader2 className="animate-spin mx-auto my-3" />}
+            {isFetchingNextPage ? <Loader2 className="animate-spin mx-auto my-3" /> : ''}
 
         </InfiniteScrollContainer>
     )

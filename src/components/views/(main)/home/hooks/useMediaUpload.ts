@@ -1,6 +1,7 @@
-import { useToast } from "@/components/ui/use-toast"
+
 import { useUploadThing } from "@/lib/uploadthing"
 import { useState } from "react"
+import { toast } from "sonner"
 
 export interface Attachment {
     file: File,
@@ -9,8 +10,6 @@ export interface Attachment {
 }
 
 export default function useMediaUpload() {
-    const { toast } = useToast()
-
     const [attachments, setAttachments] = useState<Attachment[]>([])
 
     const [uploadProgress, setUploadProgress] = useState<number>()
@@ -51,27 +50,18 @@ export default function useMediaUpload() {
         },
         onUploadError(error) {
             setAttachments(prev => prev.filter((attach) => !attach.isUploading));
-            toast({
-                variant: 'destructive',
-                description: error.message
-            })
+            toast.error(error.message)
         }
     })
 
     function handleStartUpload(files: File[]) {
         if (isUploading) {
-            toast({
-                variant: 'destructive',
-                description: 'Please wait for the current upload to complete'
-            })
+            toast.error('Please wait for the current upload to complete')
             return
         }
 
         if (attachments.length + files.length > 5) {
-            toast({
-                variant: 'destructive',
-                description: 'You can only upload up to 5 files'
-            })
+            toast.error('You can only upload up to 5 files')
             return
         }
 

@@ -5,10 +5,9 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { UpdateUserProfileValues } from "@/lib/validation";
 import { InfiniteData, QueryFilters, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function useUpdateProfileMutation() {
-    const { toast } = useToast()
-
     const router = useRouter()
 
     const queryClient = useQueryClient()
@@ -59,16 +58,11 @@ export function useUpdateProfileMutation() {
 
             router.refresh();
 
-            toast({
-                description: "Profile updated",
-            });
+            toast.success("Profile updated")
         },
         onError(error) {
             console.error(error)
-            toast({
-                variant: 'destructive',
-                description: "Failed to update profile. Please try again."
-            })
+            toast.error("Failed to update profile. Please try again.")
         }
     })
 

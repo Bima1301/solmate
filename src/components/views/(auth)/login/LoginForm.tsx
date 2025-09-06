@@ -6,15 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState, useTransition } from "react"
-import { useToast } from "@/components/ui/use-toast"
 import { PasswordInput } from "@/components/secondary/PasswordInput"
 import LoadingButton from "@/components/secondary/LoadingButton"
 import { login } from "../../../../actions/login/actions"
+import { toast } from "sonner"
 
 export default function LoginForm() {
     const [error, setError] = useState<string>();
     const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
 
     const form = useForm<LoginValues>({
         resolver: zodResolver(loginSchema),
@@ -36,12 +35,10 @@ export default function LoginForm() {
 
     useEffect(() => {
         if (error) {
-            toast({
-                title: "Uh oh! Something went wrong.",
-                description: error,
-            })
+            console.error(error)
+            toast.error("Uh oh! Something went wrong.")
         }
-    }, [error, toast])
+    }, [error])
 
     return (
         <Form {...form}>

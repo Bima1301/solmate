@@ -1,11 +1,10 @@
 import { submitPost } from "@/actions/posts/editor/actions";
-import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "@/context/SessionProvider";
 import { PostsPage } from "@/lib/types";
 import { InfiniteData, QueryFilters, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useSubmitPostMutation() {
-    const { toast } = useToast()
     const queryClient = useQueryClient();
 
     const { user } = useSession();
@@ -49,16 +48,11 @@ export function useSubmitPostMutation() {
                 },
             })
 
-            toast({
-                description: "Post created"
-            })
+            toast.success("Post created")
         },
         onError(error) {
             console.log(error);
-            toast({
-                variant: "destructive",
-                description: "Failed to post. Please try again."
-            })
+            toast.error("Failed to post. Please try again.")
         }
     })
 

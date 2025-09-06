@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import LoginForm from '../../../components/views/(auth)/login/LoginForm'
-import { Toaster } from '@/components/ui/toaster'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
     title: "Login",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Login() {
     return (
         <main className='flex h-screen items-center justify-center p-5'>
-            <Toaster />
+            <Toaster richColors/>
             <div className='flex h-full max-h-[40rem] w-full max-w-[64rem] rounded-xl overflow-hidden bg-card shadow-2xl'>
                 <div className='md:w-1/2 w-full md:space-y-10 space-y-8 overflow-y-auto md:p-10 p-8'>
                     <div className='space-y-1 text-center'>
