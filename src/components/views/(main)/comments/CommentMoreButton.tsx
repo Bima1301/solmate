@@ -1,0 +1,37 @@
+import { CommentData } from "@/lib/types";
+import { useState } from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, Trash } from "lucide-react";
+import DeleteCommentDialog from "./DeleteCommentDialog";
+
+
+interface CommentMoreButtonProps {
+    comment: CommentData;
+    className?: string;
+}
+
+export default function CommentMoreButton({ comment, className }: CommentMoreButtonProps) {
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button size={'sm'} variant={'ghost'} className={className}>
+                        <MoreHorizontal className="size-5 text-muted-foreground" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="rounded-[8px]">
+                    <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className="rounded-[8px] cursor-pointer">
+                        <span className="flex items-center gap-3 text-destructive">
+                            <Trash className="size-4" />
+                            Delete
+                        </span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <DeleteCommentDialog comment={comment} open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
+        </>
+    )
+}

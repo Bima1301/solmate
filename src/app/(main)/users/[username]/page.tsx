@@ -63,7 +63,7 @@ export default async function Page({ params: { username } }: PageProps) {
         <main className="flex w-full min-w-0 gap-5">
             <div className=" w-full min-w-0 space-y-5">
                 <UserProfile user={user} loggedInUserId={loggedInUser.id} />
-                <div className="rounded-[8px] bg-card p-5 shadow-sm">
+                <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
                     <h2 className="text-center text-2xl font-bold">
                         {user.displayName}&apos;s Posts
                     </h2>
@@ -87,9 +87,9 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
     }
 
     return (
-        <div className="h-fit w-full space-y-5 rounded-[8px] bg-card p-5 shadow-sm">
+        <div className="h-fit w-full space-y-5 rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
             <UserAvatar avatarUrl={user.avatarUrl} size={250} className="mx-auto size-full max-h-60 max-w-60 rounded-full" />
-            <div className="flex flex-wrap gap-3 sm:flex-nowrap">
+            <div className="flex flex-wrap gap-3 sm:flex-nowrap ">
                 <div className="me-auto space-y-3">
                     <div>
                         <h1 className="text-3xl font-bold">
