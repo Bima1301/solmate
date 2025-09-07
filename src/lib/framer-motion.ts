@@ -16,7 +16,7 @@ export const itemVariants: Variants = {
         opacity: 1,
         y: 0,
         transition: {
-            duration: 0.5,
+            duration: 0.2,
             // ease: [0.17, 0.67, 0.83, 0.67], // ini setara dengan easeOut
         },
     },

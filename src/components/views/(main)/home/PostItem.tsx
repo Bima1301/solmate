@@ -40,12 +40,12 @@ export default function PostItem({ post, index }: PostItemProps) {
             <Card
                 className={`border shadow-sm backdrop-blur-sm hover:shadow-lg transition-all duration-300 dark:border-slate-700 dark:bg-slate-800/90 dark:hover:shadow-slate-900/20 border-slate-200 bg-white/90`}
             >
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 md:p-6 p-3">
                     <div className="flex justify-between gap-3">
                         <div className="flex flex-wrap gap-3 items-center">
                             <UserTooltip user={post.user}>
                                 <Link href={`/user/${post.user.username}`} >
-                                    <UserAvatar avatarUrl={post.user.avatarUrl} className="w-full h-full max-w-[40px]" />
+                                    <UserAvatar avatarUrl={post.user.avatarUrl} className="md:w-full h-full md:max-w-[40px] w-7" />
                                 </Link>
                             </UserTooltip>
                             <div>
@@ -67,7 +67,7 @@ export default function PostItem({ post, index }: PostItemProps) {
                         )}
                     </div>
                 </CardHeader>
-                <CardContent className="md:mt-4 mt-2">
+                <CardContent className="md:mt-4 mt-2 md:p-6 p-3">
                     <Linkify>
                         <div className="whitespace-pre-line break-words text-gray-700 dark:text-white/80 mb-4">
                             {post.content}

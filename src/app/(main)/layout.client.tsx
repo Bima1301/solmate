@@ -5,8 +5,14 @@ import MenuBarMobile from "@/components/layout/MenuBarMobile"
 import Navbar from "@/components/layout/Navbar"
 import { containerVariants } from "@/lib/framer-motion"
 import { motion } from "framer-motion"
+import { NotificationCountInfo } from "@/lib/types"
 
-export default function LayoutClient({ children }: { children: React.ReactNode }) {
+interface LayoutClientProps {
+    children: React.ReactNode
+    initialNotificationCount: NotificationCountInfo
+}
+
+export default function LayoutClient({ children, initialNotificationCount }: LayoutClientProps) {
 
     return (
         <div className="min-h-screen bg-background pb-20 md:pb-0 dark:bg-slate-900 dark:text-slate-100">
@@ -17,10 +23,10 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
                 initial="hidden"
                 animate="visible"
             >
-                <MenuBar />
+                <MenuBar initialNotificationCount={initialNotificationCount} />
                 {children}
             </motion.div>
-            <MenuBarMobile />
+            <MenuBarMobile initialNotificationCount={initialNotificationCount} />
         </div>
     )
 }

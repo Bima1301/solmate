@@ -4,9 +4,22 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation";
 import { menuItem } from "@/lib/const"
+import { NotificationCountInfo } from "@/lib/types";
+import { useQuery } from "@tanstack/react-query";
+import kyInstance from "@/lib/ky";
 
-export default function MenuBarMobile() {
+interface MenuBarMobileProps {
+    initialNotificationCount?: NotificationCountInfo
+}
+
+export default function MenuBarMobile({ initialNotificationCount }: MenuBarMobileProps) {
     const pathname = usePathname()
+    const { data } = useQuery({
+        queryKey: ['unread-notification-count'],
+        queryFn: () => kyInstance.get('/api/notifications/unread-count').json<NotificationCountInfo>(),
+        initialData: initialNotificationCount,
+        refetchInterval: 60 * 1000
+    })
     return (
         <motion.nav
             initial={{ y: 100, opacity: 0 }}
@@ -33,15 +46,17 @@ export default function MenuBarMobile() {
                                 transition={{ duration: 0.3 }}
                             >
                                 <item.icon className={`w-6 h-6 ${pathname === item.href ? "dark:text-white text-black" : "text-slate-400"}`} />
-                                {/* {item.count && (
+                                {item.href == '/notifications' ? data?.unreadCount && data.unreadCount > 0 ? (
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
-                                        className="absolute -top-2 -right-2 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center"
+                                        className="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 text-white text-[10px] rounded-full flex items-center justify-center"
                                     >
-                                        {item.count}
+                                        {data.unreadCount || 0}
                                     </motion.div>
-                                )} */}
+                                ) : '' : (
+                                    ''
+                                )}
                             </motion.div>
                             <span className={`text-xs font-medium ${pathname === item.href ? "dark:text-white text-black" : "text-slate-400"}`}>
                                 {item.label}
