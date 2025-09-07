@@ -1,6 +1,7 @@
 "use server"
 
 import { lucia } from "@/auth";
+import streamServerClient from "@/lib/get-stream";
 import prisma from "@/lib/prisma";
 import { signupSchema, SignUpValues } from "@/lib/validation";
 import { hash } from "@node-rs/argon2";
@@ -52,15 +53,26 @@ export async function signUp(credentials: SignUpValues): Promise<{ error: string
             }
         }
 
-        await prisma.user.create({
-            data: {
+        await prisma.$transaction(async (tx) => {
+
+            await tx.user.create({
+                data: {
+                    id: userId,
+                    username,
+                    displayName: username,
+                    email,
+                    passwordHash,
+                }
+            })
+
+            await streamServerClient.upsertUser({
                 id: userId,
                 username,
-                displayName: username,
-                email,
-                passwordHash,
-            }
-        });
+                name: username
+            })
+        })
+
+
 
         const session = await lucia.createSession(userId, {});
         const sessionCookie = lucia.createSessionCookie(session.id);

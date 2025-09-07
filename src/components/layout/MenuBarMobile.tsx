@@ -4,20 +4,27 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation";
 import { menuItem } from "@/lib/const"
-import { NotificationCountInfo } from "@/lib/types";
+import { MessageCountInfo, NotificationCountInfo } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import kyInstance from "@/lib/ky";
 
 interface MenuBarMobileProps {
     initialNotificationCount?: NotificationCountInfo
+    initialMessageCount?: MessageCountInfo
 }
 
-export default function MenuBarMobile({ initialNotificationCount }: MenuBarMobileProps) {
+export default function MenuBarMobile({ initialNotificationCount, initialMessageCount }: MenuBarMobileProps) {
     const pathname = usePathname()
-    const { data } = useQuery({
+    const { data: dataNotification } = useQuery({
         queryKey: ['unread-notification-count'],
         queryFn: () => kyInstance.get('/api/notifications/unread-count').json<NotificationCountInfo>(),
         initialData: initialNotificationCount,
+        refetchInterval: 60 * 1000
+    })
+    const { data: dataMessage } = useQuery({
+        queryKey: ['unread-messages-count'],
+        queryFn: () => kyInstance.get('/api/messages/unread-count').json<MessageCountInfo>(),
+        initialData: initialMessageCount,
         refetchInterval: 60 * 1000
     })
     return (
@@ -46,13 +53,25 @@ export default function MenuBarMobile({ initialNotificationCount }: MenuBarMobil
                                 transition={{ duration: 0.3 }}
                             >
                                 <item.icon className={`w-6 h-6 ${pathname === item.href ? "dark:text-white text-black" : "text-slate-400"}`} />
-                                {item.href == '/notifications' ? data?.unreadCount && data.unreadCount > 0 ? (
+                                {item.href == '/notifications' ? dataNotification?.unreadCount && dataNotification.unreadCount > 0 ? (
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
                                         className="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 text-white text-[10px] rounded-full flex items-center justify-center"
                                     >
-                                        {data.unreadCount || 0}
+                                        {dataNotification.unreadCount || 0}
+                                    </motion.div>
+                                ) :
+                                    '' : (
+                                    ''
+                                )}
+                                {item.href == '/messages' ? dataMessage?.unreadCount && dataMessage.unreadCount > 0 ? (
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 text-white text-[10px] rounded-full flex items-center justify-center"
+                                    >
+                                        {dataMessage?.unreadCount || 0}
                                     </motion.div>
                                 ) : '' : (
                                     ''

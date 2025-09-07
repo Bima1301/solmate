@@ -8,13 +8,15 @@ import { usePathname } from "next/navigation";
 import { menuItem } from "@/lib/const"
 import { itemVariants } from "@/lib/framer-motion"
 import NotificationButton from "./NotificationButton";
-import { NotificationCountInfo } from "@/lib/types";
+import { MessageCountInfo, NotificationCountInfo } from "@/lib/types";
+import MessageButton from "./MessageButton";
 
 interface MenuBarProps {
     initialNotificationCount?: NotificationCountInfo
+    initialMessageCount?: MessageCountInfo
 }
 
-export default function MenuBar({ initialNotificationCount }: MenuBarProps) {
+export default function MenuBar({ initialNotificationCount, initialMessageCount }: MenuBarProps) {
     const pathname = usePathname()
 
     return (
@@ -34,22 +36,28 @@ export default function MenuBar({ initialNotificationCount }: MenuBarProps) {
                                         initialState={initialNotificationCount || { unreadCount: 0 }}
                                         pathname={pathname}
                                     />
-                                ) : (
-                                    <Link
-                                        className={
-                                            buttonVariants({
-                                                className: `w-full flex !justify-start gap-3 h-12 transition-all duration-300 ${pathname === item.href
-                                                    ? "bg-slate-800 text-white shadow-md hover:bg-slate-700 dark:bg-slate-700 dark:text-slate-100 dark:shadow-md dark:hover:bg-slate-600"
-                                                    : "hover:bg-slate-100 text-slate-700 hover:text-slate-900 dark:hover:bg-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
-                                                    }`,
-                                                variant: pathname === item.href ? "default" : "ghost"
-                                            })}
-                                        href={item.href}
-                                    >
-                                        <item.icon className="w-5 h-5" />
-                                        <span className="font-medium">{item.label}</span>
-                                    </Link>
-                                )}
+                                ) : item.href == '/messages' ? (
+                                    <MessageButton
+                                        initialState={initialMessageCount || { unreadCount: 0 }}
+                                        pathname={pathname}
+                                    />
+                                ) :
+                                    (
+                                        <Link
+                                            className={
+                                                buttonVariants({
+                                                    className: `w-full flex !justify-start gap-3 h-12 transition-all duration-300 ${pathname === item.href
+                                                        ? "bg-slate-800 text-white shadow-md hover:bg-slate-700 dark:bg-slate-700 dark:text-slate-100 dark:shadow-md dark:hover:bg-slate-600"
+                                                        : "hover:bg-slate-100 text-slate-700 hover:text-slate-900 dark:hover:bg-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
+                                                        }`,
+                                                    variant: pathname === item.href ? "default" : "ghost"
+                                                })}
+                                            href={item.href}
+                                        >
+                                            <item.icon className="w-5 h-5" />
+                                            <span className="font-medium">{item.label}</span>
+                                        </Link>
+                                    )}
                             </motion.div>
                         ))}
                     </nav>

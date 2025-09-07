@@ -7,7 +7,7 @@ import { useSession } from "@/context/SessionProvider";
 import UserAvatar from "@/components/layout/UserAvatar";
 import { useSubmitPostMutation } from "@/store/mutations/posts/editor";
 import LoadingButton from "@/components/secondary/LoadingButton";
-import useMediaUpload, { Attachment } from "./hooks/useMediaUpload";
+import useMediaUpload, { Attachment } from "../../../../hooks/useMediaUpload";
 import { ClipboardEvent, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Loader2, Plus, X } from "lucide-react";

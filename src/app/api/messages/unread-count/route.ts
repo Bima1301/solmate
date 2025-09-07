@@ -1,8 +1,8 @@
 'use server'
 
 import { validateRequest } from "@/auth";
-import prisma from "@/lib/prisma";
-import { NotificationCountInfo } from "@/lib/types";
+import streamServerClient from "@/lib/get-stream";
+import { MessageCountInfo } from "@/lib/types";
 
 export async function GET() {
     try {
@@ -12,15 +12,10 @@ export async function GET() {
             return Response.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        const unreadCount = await prisma.notification.count({
-            where: {
-                recipientId: user.id,
-                read: false
-            }
-        })
+        const { total_unread_count } = await streamServerClient.getUnreadCount(user.id)
 
-        const data: NotificationCountInfo = {
-            unreadCount
+        const data: MessageCountInfo = {
+            unreadCount: total_unread_count
         }
 
         return Response.json(data)
