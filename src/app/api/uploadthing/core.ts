@@ -17,11 +17,9 @@ function convertToUtfsUrl(url: string): string {
     // To: https://utfs.io/a/1j6r7mq85w/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
 
     if (url.includes('.ufs.sh/a/')) {
-        // Extract APP_ID from domain
-        const appId = url.split('://')[1].split('.ufs.sh')[0];
         // Extract file key after /a/
         const fileKey = url.split('/a/')[1];
-        return `https://utfs.io/a/${appId}/${fileKey}`;
+        return `https://utfs.io/a/${fileKey}`;
     }
 
     return url;
