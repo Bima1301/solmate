@@ -6,28 +6,25 @@ import { UploadThingError, UTApi } from 'uploadthing/server';
 
 const f = createUploadthing();
 
-// Helper function to extract file key from utfs.io URL
-function extractFileKey(url: string): string {
-    // Extract file key from utfs.io URL format
+// Helper function to convert ufs.sh URL to utfs.io format
+function convertToUtfsUrl(url: string): string {
+    // If it's already utfs.io, return as is
     if (url.includes('utfs.io')) {
-        return url.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1];
+        return url;
     }
-    // Fallback: extract from any URL format
-    const parts = url.split('/');
-    return parts[parts.length - 1];
-}
 
-// Helper function to convert file URL to app URL
-function convertToAppUrl(fileUrl: string): string {
-    const isDev = process.env.NODE_ENV === 'development';
+    // Convert from: https://1j6r7mq85w.ufs.sh/a/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
+    // To: https://utfs.io/a/1j6r7mq85w/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
 
-    if (isDev) {
-        // Development: convert /f/ to /a/APP_ID/
-        return fileUrl.replace("/f/", `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`);
-    } else {
-        // Production: URL is already in correct format, just replace /f/ with /a/
-        return fileUrl.replace("/f/", "/a/");
+    if (url.includes('.ufs.sh/a/')) {
+        // Extract APP_ID from domain
+        const appId = url.split('://')[1].split('.ufs.sh')[0];
+        // Extract file key after /a/
+        const fileKey = url.split('/a/')[1];
+        return `https://utfs.io/a/${appId}/${fileKey}`;
     }
+
+    return url;
 }
 
 export const fileRouter = {
@@ -46,24 +43,17 @@ export const fileRouter = {
             return { user };
         })
         .onUploadComplete(async ({ metadata, file }) => {
-            console.log('file uploaded', file)
-            const oldAvatarUrl = metadata.user.avatarUrl;
+            const oldAvatarUrl = metadata.user.avatarUrl
 
-            // Delete old avatar if exists
             if (oldAvatarUrl) {
-                try {
-                    const key = extractFileKey(oldAvatarUrl);
-                    if (key) {
-                        await new UTApi().deleteFiles(key);
-                    }
-                } catch (error) {
-                    console.error('Error deleting old avatar:', error);
-                    // Continue execution even if deletion fails
-                }
+                const key = oldAvatarUrl.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1]
+
+                await new UTApi().deleteFiles(key)
             }
 
-            // Convert to app URL
-            const newAvatarUrl = convertToAppUrl(file.url);
+            // Convert the original URL to utfs.io format
+            let newAvatarUrl = file.url.replace("/f/", `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)
+            newAvatarUrl = convertToUtfsUrl(newAvatarUrl);
 
             await Promise.all([
                 prisma.user.update({
@@ -76,11 +66,10 @@ export const fileRouter = {
                         image: newAvatarUrl
                     }
                 })
-            ]);
+            ])
 
-            return { avatarUrl: newAvatarUrl };
+            return { avatarUrl: newAvatarUrl }
         }),
-
     attachment: f({
         image: { maxFileSize: '4MB', maxFileCount: 5 },
         video: { maxFileSize: '64MB', maxFileCount: 5 }
@@ -95,18 +84,17 @@ export const fileRouter = {
             return {};
         })
         .onUploadComplete(async ({ file }) => {
-            // Convert to app URL
-            const mediaUrl = convertToAppUrl(file.url);
+            // Use appUrl and convert to utfs.io format if needed
+            const mediaUrl = convertToUtfsUrl(file.appUrl);
 
             const media = await prisma.media.create({
                 data: {
                     url: mediaUrl,
                     type: file.type.startsWith('image') ? 'IMAGE' : 'VIDEO'
                 }
-            });
-
-            return { mediaId: media.id };
+            })
+            return { mediaId: media.id }
         })
-} satisfies FileRouter;
+} satisfies FileRouter
 
 export type AppFileRouter = typeof fileRouter;
