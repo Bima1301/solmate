@@ -9,7 +9,7 @@ import TrendingTopicsCard from './TrendingTopicsCard'
 
 export default function TrendsSidebar() {
   return (
-    <Suspense fallback={<Loader2 className='mx-auto animate-spin' />}>
+    <Suspense fallback={<Loader2 className='mx-auto animate-spin hidden lg:block' />}>
       <WhoToFollowLayout>
         <>
           <WhoToFollow />
