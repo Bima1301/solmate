@@ -67,7 +67,7 @@ export default function PostItem({ post, index }: PostItemProps) {
                         )}
                     </div>
                 </CardHeader>
-                <CardContent className="md:mt-4 mt-2 md:p-6 p-3">
+                <CardContent className="md:p-6 p-3">
                     <Linkify>
                         <div className="whitespace-pre-line break-words text-gray-700 dark:text-white/80 mb-4">
                             {post.content}
