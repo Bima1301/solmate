@@ -45,7 +45,7 @@ export default function PostItem({ post, index }: PostItemProps) {
                         <div className="flex flex-wrap gap-3 items-center">
                             <UserTooltip user={post.user}>
                                 <Link href={`/users/${post.user.username}`} >
-                                    <UserAvatar avatarUrl={post.user.avatarUrl} className="md:w-full h-full md:max-w-[40px] w-7" />
+                                    <UserAvatar avatarUrl={post.user.avatarUrl} className="md:size-10 size-8" />
                                 </Link>
                             </UserTooltip>
                             <div>

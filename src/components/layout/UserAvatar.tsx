@@ -14,6 +14,7 @@ export default function UserAvatar({ avatarUrl, size = 8, className }: UserAvata
         alt="User avatar"
         width={size ?? 48}
         height={size ?? 48}
+        unoptimized
         className={cn("aspect-square flex-none h-fit rounded-full bg-secondary object-cover", className)}
     />
 }
