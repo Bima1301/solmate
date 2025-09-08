@@ -6,16 +6,15 @@ import { UploadThingError, UTApi } from 'uploadthing/server';
 
 const f = createUploadthing();
 
-// Helper function to extract file key from URL
+// Helper function to extract file key from utfs.io URL
 function extractFileKey(url: string): string {
-    // Handle both development (utfs.io) and production (APP_ID.ufs.sh) URLs
+    // Extract file key from utfs.io URL format
     if (url.includes('utfs.io')) {
-        // Development: https://utfs.io/a/APP_ID/file-key
-        return url.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1];
-    } else {
-        // Production: https://APP_ID.ufs.sh/a/APP_ID/file-key
         return url.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1];
     }
+    // Fallback: extract from any URL format
+    const parts = url.split('/');
+    return parts[parts.length - 1];
 }
 
 // Helper function to convert file URL to app URL
@@ -47,6 +46,7 @@ export const fileRouter = {
             return { user };
         })
         .onUploadComplete(async ({ metadata, file }) => {
+            console.log('file uploaded', file)
             const oldAvatarUrl = metadata.user.avatarUrl;
 
             // Delete old avatar if exists
