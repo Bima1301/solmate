@@ -17,7 +17,6 @@ import { useDropzone } from "@uploadthing/react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { cardHoverVariants } from "@/lib/framer-motion";
 
 export default function PostEditor() {
@@ -125,54 +124,6 @@ export default function PostEditor() {
                 </CardContent>
             </Card>
         </motion.div >
-        // <div className="flex flex-col gap-5 rounded-[8px] bg-card p-5 shadow overflow-x-hidden">
-        //     <div className="flex flex-row justify-between w-full items-center">
-        //         <div className="flex flex-row items-center gap-2">
-        //             <UserAvatar avatarUrl={user.avatarUrl} className="hidden sm:inline w-full h-full max-w-[40px]" />
-        //             <p className="text-gray-800 dark:text-white/80">
-        //                 {user.displayName}
-        //             </p>
-        //         </div>
-        //     </div>
-        //     <div {...rootProps} className="w-full">
-        //         <EditorContent
-        //             editor={editor}
-        //             className={cn("w-full max-h-[20rem] min-h-[4rem] focus:border-none overflow-y-auto md:ps-[48px] break-all text-gray-800 dark:text-white/70", isDragActive && 'outline-dashed')}
-        //             onPaste={onPaste}
-        //         />
-        //         <input
-        //             {...getInputProps()}
-        //         />
-        //     </div>
-        //     {!!attachments.length && (
-        //         <AttachmentPreviews
-        //             attachments={attachments}
-        //             removeAttachment={removeAttachment}
-        //         />
-        //     )}
-        //     <div className="flex w-full justify-end border-t pt-4 gap-3 items-center">
-        //         {isUploading && (
-        //             <>
-        //                 <span className="text-sm">
-        //                     {uploadProgress ?? 0}%
-        //                 </span>
-        //                 <Loader2 className="size-5 animate-spin text-primary" />
-        //             </>
-        //         )}
-        //         <AddAttachmentButton
-        //             onFilesSelected={startUpload}
-        //             disabled={isUploading || attachments.length > 5}
-        //         />
-        //         <LoadingButton
-        //             loading={mutation.isPending}
-        //             onClick={onSubmit}
-        //             disabled={!input.trim() || isUploading}
-        //             className="min-w-20"
-        //         >
-        //             Post
-        //         </LoadingButton>
-        //     </div>
-        // </div>
     )
 }
 

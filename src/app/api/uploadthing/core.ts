@@ -87,7 +87,7 @@ export const fileRouter = {
 
             const media = await prisma.media.create({
                 data: {
-                    url: mediaUrl,
+                    url: convertToUtfsUrl(mediaUrl),
                     type: file.type.startsWith('image') ? 'IMAGE' : 'VIDEO'
                 }
             })
