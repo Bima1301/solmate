@@ -3,7 +3,7 @@
 import { MessageCountInfo } from "@/lib/types"
 import Link from "next/link"
 import { buttonVariants } from "../ui/button"
-import { Bell } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import kyInstance from "@/lib/ky"
 import { motion } from "framer-motion"
@@ -31,7 +31,7 @@ export default function MessageButton({ initialState, pathname }: MessageButtonP
             })}
             href={'/messages'}
         >
-            <Bell className="w-5 h-5" />
+            <MessageCircle className="w-5 h-5" />
             <span className="font-medium">Messages</span>
             {data.unreadCount && data.unreadCount > 0 ? (
                 <motion.div
