@@ -13,13 +13,27 @@ function convertToUtfsUrl(url: string): string {
         return url;
     }
 
-    // Convert from: https://1j6r7mq85w.ufs.sh/a/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
-    // To: https://utfs.io/a/1j6r7mq85w/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
-
+    // Handle: https://1j6r7mq85w.ufs.sh/a/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
+    // To:     https://utfs.io/a/1j6r7mq85w/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
     if (url.includes('.ufs.sh/a/')) {
-        // Extract file key after /a/
-        const fileKey = url.split('/a/')[1];
-        return `https://utfs.io/a/${fileKey}`;
+        // Extract subdomain and file key
+        const match = url.match(/^https:\/\/([^.]+)\.ufs\.sh\/a\/(.+)$/);
+        if (match) {
+            const subdomain = match[1];
+            const fileKey = match[2];
+            return `https://utfs.io/a/${subdomain}/${fileKey}`;
+        }
+    }
+
+    // Handle: https://1j6r7mq85w.ufs.sh/f/216a36d6-ab35-4441-94de-c4e6b8f9710b-ybk1ai.png
+    // To:     https://utfs.io/a/1j6r7mq85w/216a36d6-ab35-4441-94de-c4e6b8f9710b-ybk1ai.png
+    if (url.includes('.ufs.sh/f/')) {
+        const match = url.match(/^https:\/\/([^.]+)\.ufs\.sh\/f\/(.+)$/);
+        if (match) {
+            const subdomain = match[1];
+            const fileKey = match[2];
+            return `https://utfs.io/a/${subdomain}/${fileKey}`;
+        }
     }
 
     return url;
@@ -87,7 +101,7 @@ export const fileRouter = {
 
             const media = await prisma.media.create({
                 data: {
-                    url: convertToUtfsUrl(mediaUrl),
+                    url: mediaUrl,
                     type: file.type.startsWith('image') ? 'IMAGE' : 'VIDEO'
                 }
             })
