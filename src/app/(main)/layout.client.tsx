@@ -16,17 +16,19 @@ interface LayoutClientProps {
 export default function LayoutClient({ children, initialNotificationCount, initialMessageCount }: LayoutClientProps) {
 
     return (
-        <div className="h-screen bg-background pb-20 md:pb-0 dark:bg-slate-900 dark:text-slate-100 flex flex-col">
+        <div className="min-h-screen bg-background dark:bg-slate-900 dark:text-slate-100">
             <Navbar />
-            <motion.div
-                className="w-full flex gap-6 p-4 flex-1 max-w-7xl mx-auto"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                <MenuBar initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount} />
-                {children}
-            </motion.div>
+            <div className="pb-20 md:pb-0">
+                <motion.div
+                    className="w-full flex gap-6 p-4 max-w-7xl mx-auto"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <MenuBar initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount} />
+                    {children}
+                </motion.div>
+            </div>
             <MenuBarMobile initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount} />
         </div>
     )

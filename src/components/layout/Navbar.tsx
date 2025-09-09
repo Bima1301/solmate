@@ -9,10 +9,10 @@ import Link from 'next/link'
 export default function Navbar() {
     return (
         <motion.header
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="sticky top-0 z-50 bg-background backdrop-blur-xl border-b border-border/50 border-slate-200  dark:border-slate-700 dark:bg-slate-800/90 dark:hover:shadow-slate-900/20"
+            className="sticky-navbar bg-background/95 backdrop-blur-xl border-b border-border/50 border-slate-200 dark:border-slate-700 dark:bg-slate-800/95 dark:hover:shadow-slate-900/20"
         >
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <Link
