@@ -6,6 +6,24 @@ import { UploadThingError, UTApi } from 'uploadthing/server';
 
 const f = createUploadthing();
 
+function convertToUtfsUrlForAvatar(url: string): string {
+    // If it's already utfs.io, return as is
+    if (url.includes('utfs.io')) {
+        return url;
+    }
+
+    // Convert from: https://1j6r7mq85w.ufs.sh/a/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
+    // To: https://utfs.io/a/1j6r7mq85w/1b7a08e7-7a10-4f50-bae5-02a4bf3c6e69-ywgifp.webp
+
+    if (url.includes('.ufs.sh/a/')) {
+        // Extract file key after /a/
+        const fileKey = url.split('/a/')[1];
+        return `https://utfs.io/a/${fileKey}`;
+    }
+
+    return url;
+}
+
 // Helper function to convert ufs.sh URL to utfs.io format
 function convertToUtfsUrl(url: string): string {
     // If it's already utfs.io, return as is
@@ -65,7 +83,7 @@ export const fileRouter = {
 
             // Convert the original URL to utfs.io format
             let newAvatarUrl = file.url.replace("/f/", `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)
-            newAvatarUrl = convertToUtfsUrl(newAvatarUrl);
+            newAvatarUrl = convertToUtfsUrlForAvatar(newAvatarUrl);
 
             await Promise.all([
                 prisma.user.update({
