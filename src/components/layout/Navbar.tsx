@@ -2,9 +2,9 @@
 import React from 'react'
 import UserButton from './UserButton'
 import { motion, } from "framer-motion"
-import { Search, Sparkles } from 'lucide-react'
-import { Input } from '../ui/input'
+import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import SearchField from './SearchField'
 
 export default function Navbar() {
     return (
@@ -31,13 +31,7 @@ export default function Navbar() {
                 </Link>
 
                 <div className="flex-1 max-w-md mx-8">
-                    <motion.div className="relative" whileFocus={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                            placeholder="Search Sol Mate..."
-                            className="pl-10 transition-all duration-300 bg-slate-50 border-slate-200 focus:bg-white focus:border-slate-400 dark:bg-slate-800 dark:border-slate-600 dark:focus:bg-slate-700 dark:focus:border-slate-500 dark:text-slate-100 dark:placeholder:text-slate-400"
-                        />
-                    </motion.div>
+                    <SearchField />
                 </div>
 
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>

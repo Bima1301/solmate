@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Login() {
     return (
         <main className='flex h-screen items-center justify-center p-5'>
-            <Toaster richColors/>
+            <Toaster richColors />
             <div className='flex h-full max-h-[40rem] w-full max-w-[64rem] rounded-xl overflow-hidden bg-card shadow-2xl'>
                 <div className='md:w-1/2 w-full md:space-y-10 space-y-8 overflow-y-auto md:p-10 p-8'>
                     <div className='space-y-1 text-center'>
@@ -28,6 +28,12 @@ export default function Login() {
                             Log in
                         </h3>
                         <LoginForm />
+                        {/* <div className="flex items-center gap-3">
+                            <div className="h-px flex-1 bg-muted" />
+                            <span>OR</span>
+                            <div className="h-px flex-1 bg-muted" />
+                        </div>
+                        <GoogleSignInButton /> */}
                         <div className='flex flex-row items-center justify-center gap-3 font-light md:text-sm text-xs'>
                             <p>Don&apos;t have an account?</p>
                             <Link href='/signup' className='block text-center hover:underline'>
