@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app'
 
 export default function SearchField() {
     const router = useRouter();
