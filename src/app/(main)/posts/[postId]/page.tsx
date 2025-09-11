@@ -14,6 +14,7 @@ import { cache, Suspense } from "react"
 
 interface PageProps {
     params: { postId: string }
+    searchParams: { isCommentOpen?: string }
 }
 
 const getPost = cache(async (postId: string, loggedInUserId: string) => {
@@ -41,7 +42,7 @@ export async function generateMetadata({ params: { postId } }: PageProps): Promi
     }
 }
 
-export default async function Page({ params: { postId } }: PageProps) {
+export default async function Page({ params: { postId }, searchParams }: PageProps) {
     const { user: loggedInUser } = await validateRequest()
 
     if (!loggedInUser) {
@@ -51,10 +52,11 @@ export default async function Page({ params: { postId } }: PageProps) {
     }
 
     const post = await getPost(postId, loggedInUser.id)
+    const isCommentOpen = searchParams.isCommentOpen === 'true'
 
     return <main className="flex w-full min-w-0 gap-5">
         <div className="w-full min-w-0 space-y-5">
-            <PostItem post={post} />
+            <PostItem post={post} isCommentOpen={isCommentOpen} />
         </div>
         <div
             className="sticky top-[88px] hidden h-fit w-72 flex-none space-y-5 md:block lg:w-80"

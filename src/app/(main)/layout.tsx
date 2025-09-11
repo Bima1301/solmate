@@ -5,6 +5,7 @@ import LayoutClient from "./layout.client";
 import prisma from "@/lib/prisma";
 import { MessageCountInfo, NotificationCountInfo } from "@/lib/types";
 import streamServerClient from "@/lib/get-stream";
+import TrendsSidebar from "@/components/layout/TrendsSidebar";
 
 export default async function Layout({
     children,
@@ -58,7 +59,11 @@ export default async function Layout({
     }
 
     return <SessionProvider value={session}>
-        <LayoutClient initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount}>
+        <LayoutClient
+            initialNotificationCount={initialNotificationCount}
+            initialMessageCount={initialMessageCount}
+            trendsSidebar={<TrendsSidebar />}
+        >
             {children}
         </LayoutClient>
     </SessionProvider >;

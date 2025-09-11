@@ -6,15 +6,17 @@ import Navbar from "@/components/layout/Navbar"
 import { containerVariants } from "@/lib/framer-motion"
 import { motion } from "framer-motion"
 import { MessageCountInfo, NotificationCountInfo } from "@/lib/types"
+import { usePathname } from "next/navigation"
 
 interface LayoutClientProps {
     children: React.ReactNode
     initialNotificationCount: NotificationCountInfo
     initialMessageCount: MessageCountInfo
+    trendsSidebar?: React.ReactNode
 }
 
-export default function LayoutClient({ children, initialNotificationCount, initialMessageCount }: LayoutClientProps) {
-
+export default function LayoutClient({ children, initialNotificationCount, initialMessageCount, trendsSidebar }: LayoutClientProps) {
+    const pathname = usePathname()
     return (
         <div className="min-h-screen bg-background dark:bg-slate-900 dark:text-slate-100">
             <Navbar />
@@ -26,7 +28,10 @@ export default function LayoutClient({ children, initialNotificationCount, initi
                     animate="visible"
                 >
                     <MenuBar initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount} />
-                    {children}
+                    <main className="flex w-full min-w-0 gap-5 mx-auto">
+                        {children}
+                        {pathname !== '/messages' && trendsSidebar}
+                    </main>
                 </motion.div>
             </div>
             <MenuBarMobile initialNotificationCount={initialNotificationCount} initialMessageCount={initialMessageCount} />

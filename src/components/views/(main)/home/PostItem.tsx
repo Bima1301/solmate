@@ -21,11 +21,12 @@ import { Media } from "@prisma/client"
 interface PostItemProps {
     post: PostData
     index?: number
+    isCommentOpen?: boolean
 }
 
-export default function PostItem({ post, index }: PostItemProps) {
+export default function PostItem({ post, index, isCommentOpen = false }: PostItemProps) {
     const { user } = useSession()
-    const [showComments, setShowComments] = useState(false)
+    const [showComments, setShowComments] = useState(isCommentOpen)
 
     return (
         <motion.article

@@ -29,29 +29,36 @@ export default function CommentItem({ comment, commentIndex }: CommentItemProps)
             />
             <div className="flex-1">
 
-                <div className="flex items-center gap-2 mb-1">
-                    <p
-                        className={`font-medium text-sm transition-colors duration-300 dark:text-slate-100 text-slate-900`}
-                    >
-                        {comment.user.displayName}
-                    </p>
-                    <div className="flex gap-2 items-center">
-                        <UserTooltip
-                            user={comment.user}
-                        >
-                            <Link
-                                href={`/users/${comment.user.username}`}
-                                className={`text-xs transition-colors duration-300 dark:text-slate-400 text-slate-500 hover:underline`}
-                            >
-                                @{comment.user.username} ·
-                            </Link>
-                        </UserTooltip>
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-2 md:mb-1">
                         <p
-                            className={`text-xs transition-colors duration-300 dark:text-slate-400 text-slate-500`}
+                            className={`font-medium text-sm transition-colors duration-300 dark:text-slate-100 text-slate-900`}
                         >
-                            {formatRelativeDate(comment.createdAt)}
+                            {comment.user.displayName}
                         </p>
+                        <div className="flex gap-2 items-center">
+                            <UserTooltip
+                                user={comment.user}
+                            >
+                                <Link
+                                    href={`/users/${comment.user.username}`}
+                                    className={`text-xs transition-colors duration-300 dark:text-slate-400 text-slate-500 hover:underline`}
+                                >
+                                    @{comment.user.username}
+                                </Link>
+                            </UserTooltip>
+                            <p
+                                className={`text-xs transition-colors duration-300 dark:text-slate-400 text-slate-500 md:block hidden`}
+                            >
+                                · {formatRelativeDate(comment.createdAt)}
+                            </p>
+                        </div>
                     </div>
+                    <p
+                        className={`text-xs transition-colors duration-300 dark:text-slate-400 text-slate-500 md:hidden block mb-3`}
+                    >
+                        {formatRelativeDate(comment.createdAt)}
+                    </p>
                 </div>
                 <p
                     className={`text-sm leading-relaxed transition-colors duration-300 dark:text-slate-200 text-slate-700 `}

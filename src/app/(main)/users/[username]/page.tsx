@@ -1,8 +1,6 @@
 import { validateRequest } from "@/auth"
-import TrendsSidebar from "@/components/layout/TrendsSidebar"
 import UserAvatar from "@/components/layout/UserAvatar"
 import FollowerCount from "@/components/secondary/FollowerCount"
-import { Button } from "@/components/ui/button"
 import EditProfileButton from "@/components/views/(main)/home/EditProfileButton"
 import FollowButton from "@/components/views/(main)/home/FollowButton"
 import Linkify from "@/components/views/(main)/home/Linkify"
@@ -60,18 +58,16 @@ export default async function Page({ params: { username } }: PageProps) {
 
 
     return (
-        <main className="flex w-full min-w-0 gap-5">
-            <div className=" w-full min-w-0 space-y-5">
-                <UserProfile user={user} loggedInUserId={loggedInUser.id} />
-                <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
-                    <h2 className="text-center text-2xl font-bold">
-                        {user.displayName}&apos;s Posts
-                    </h2>
-                </div>
-                <UserPosts userId={user.id} />
+
+        <div className=" w-full min-w-0 space-y-5">
+            <UserProfile user={user} loggedInUserId={loggedInUser.id} />
+            <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
+                <h2 className="text-center text-2xl font-bold">
+                    {user.displayName}&apos;s Posts
+                </h2>
             </div>
-            <TrendsSidebar />
-        </main>
+            <UserPosts userId={user.id} />
+        </div>
     )
 }
 
