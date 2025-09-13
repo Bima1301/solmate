@@ -1,10 +1,8 @@
-import { Loader2 } from 'lucide-react'
-import React from 'react'
 
 export default function Loading() {
     return (
         <div className="w-full min-w-0 space-y-5">
-            {/* User Profile Skeleton */}
+            {/* User Profile Loading */}
             <div className="h-fit w-full space-y-5 rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
                 {/* Avatar Skeleton */}
                 <div className="mx-auto size-full max-h-60 max-w-60 rounded-full bg-muted animate-pulse" />
@@ -38,14 +36,25 @@ export default function Loading() {
                 </div>
             </div>
 
-            {/* Posts Header Skeleton */}
+            {/* Posts Header Loading */}
             <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
                 <div className="h-8 w-48 bg-muted rounded animate-pulse mx-auto" />
             </div>
 
-            {/* Loading Indicator */}
-            <div className="flex justify-center">
-                <Loader2 className="animate-spin" />
+            {/* Posts Loading */}
+            <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                    <div key={i} className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
+                        <div className="flex gap-3">
+                            <div className="w-10 h-10 bg-muted rounded-full animate-pulse flex-shrink-0" />
+                            <div className="flex-1 space-y-2">
+                                <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+                                <div className="h-4 w-full bg-muted rounded animate-pulse" />
+                                <div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     )
