@@ -1,52 +1,37 @@
-import { validateRequest } from "@/auth"
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { useParams } from "next/navigation"
 import UserAvatar from "@/components/layout/UserAvatar"
 import FollowerCount from "@/components/secondary/FollowerCount"
 import EditProfileButton from "@/components/views/(main)/home/EditProfileButton"
 import FollowButton from "@/components/views/(main)/home/FollowButton"
 import Linkify from "@/components/views/(main)/home/Linkify"
 import UserPosts from "@/components/views/(main)/users/UserPosts"
-import prisma from "@/lib/prisma"
-import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types"
+import { FollowerInfo, UserData } from "@/lib/types"
 import { formatNumber } from "@/lib/utils"
 import { formatDate } from "date-fns"
-import { Metadata } from "next"
-import { notFound } from "next/navigation"
-import { cache, Suspense } from "react"
+import kyInstance from "@/lib/ky"
+import { useSession } from "@/context/SessionProvider"
 
-interface PageProps {
-    params: { username: string }
-}
+export default function UserProfilePage() {
+    const params = useParams()
+    const { user: loggedInUser } = useSession()
+    const username = params.username as string
 
-const getUser = cache(async (username: string, logedInUserId: string) => {
-    const user = await prisma.user.findFirst({
-        where: {
-            username: {
-                equals: username,
-                mode: "default"
-            }
-        },
-        select: getUserDataSelect(logedInUserId)
+    const {
+        data: user,
+        status,
+        error
+    } = useQuery({
+        queryKey: ['user-profile', username],
+        queryFn: () => kyInstance.get(`/api/users/username/${username}`).json<UserData>(),
+        enabled: !!loggedInUser && !!username,
+        retry(failureCount, error: any) {
+            if (error?.status === 404) return false
+            return failureCount < 3
+        }
     })
-
-    if (!user) notFound()
-
-    return user
-})
-
-export async function generateMetadata({ params: { username } }: PageProps): Promise<Metadata> {
-    const { user: loggedInUser } = await validateRequest()
-
-    if (!loggedInUser) return {}
-
-    const user = await getUser(username, loggedInUser.id)
-
-    return {
-        title: `${user.displayName} (@${user.username})`,
-    }
-}
-
-export default async function Page({ params: { username } }: PageProps) {
-    const { user: loggedInUser } = await validateRequest()
 
     if (!loggedInUser) {
         return <p className="text-destructive">
@@ -54,54 +39,50 @@ export default async function Page({ params: { username } }: PageProps) {
         </p>
     }
 
+    if (status === 'pending') {
+        return (
+            <div className="w-full min-w-0 space-y-5">
+                <UserProfileSkeleton />
+                <PostsHeaderSkeleton />
+                <UserPostsSkeleton />
+            </div>
+        )
+    }
+
+    if (status === 'error') {
+        if (error?.status === 404) {
+            return <p className="text-destructive text-center">
+                User not found.
+            </p>
+        }
+        return <p className="text-destructive text-center">
+            An error occurred while loading user profile.
+        </p>
+    }
+
+    if (!user) return null
+
+    const followerInfo: FollowerInfo = {
+        followers: user._count.followers,
+        isFollowedByUser: user.followers.some(follower => follower.followerId === loggedInUser.id)
+    }
+
     return (
         <div className="w-full min-w-0 space-y-5">
-            <Suspense fallback={<UserProfileSkeleton />}>
-                <UserProfileWrapper username={username} loggedInUserId={loggedInUser.id} />
-            </Suspense>
-            <Suspense fallback={<PostsHeaderSkeleton />}>
-                <PostsHeader username={username} loggedInUserId={loggedInUser.id} />
-            </Suspense>
-            <Suspense fallback={<UserPostsSkeleton />}>
-                <UserPostsWrapper username={username} loggedInUserId={loggedInUser.id} />
-            </Suspense>
+            <UserProfile user={user} loggedInUserId={loggedInUser.id} followerInfo={followerInfo} />
+            <PostsHeader user={user} />
+            <UserPosts userId={user.id} />
         </div>
     )
-}
-
-// Wrapper components for better Suspense boundaries
-async function UserProfileWrapper({ username, loggedInUserId }: { username: string, loggedInUserId: string }) {
-    const user = await getUser(username, loggedInUserId)
-    return <UserProfile user={user} loggedInUserId={loggedInUserId} />
-}
-
-async function PostsHeader({ username, loggedInUserId }: { username: string, loggedInUserId: string }) {
-    const user = await getUser(username, loggedInUserId)
-    return (
-        <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
-            <h2 className="text-center text-2xl font-bold">
-                {user.displayName}&apos;s Posts
-            </h2>
-        </div>
-    )
-}
-
-async function UserPostsWrapper({ username, loggedInUserId }: { username: string, loggedInUserId: string }) {
-    const user = await getUser(username, loggedInUserId)
-    return <UserPosts userId={user.id} />
 }
 
 interface UserProfileProps {
     user: UserData,
-    loggedInUserId: string
+    loggedInUserId: string,
+    followerInfo: FollowerInfo
 }
 
-async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
-    const followerInfo: FollowerInfo = {
-        followers: user._count.followers,
-        isFollowedByUser: user.followers.some(follower => follower.followerId === loggedInUserId)
-    }
-
+function UserProfile({ user, loggedInUserId, followerInfo }: UserProfileProps) {
     return (
         <div className="h-fit w-full space-y-5 rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
             <UserAvatar avatarUrl={user.avatarUrl} size={250} className="mx-auto size-full max-h-60 max-w-60 rounded-full" />
@@ -144,6 +125,16 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
                     </Linkify>
                 </>
             )}
+        </div>
+    )
+}
+
+function PostsHeader({ user }: { user: UserData }) {
+    return (
+        <div className="rounded-[8px] bg-card p-5 shadow-sm border dark:border-slate-700 border-slate-200">
+            <h2 className="text-center text-2xl font-bold">
+                {user.displayName}&apos;s Posts
+            </h2>
         </div>
     )
 }
